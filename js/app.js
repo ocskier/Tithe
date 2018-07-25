@@ -12,15 +12,17 @@ $(document).ready(function() {
     //Research and Public Policy = 11
     
     
-       var city = ;
+    //    var city = ;
 
-       var state = ;
+    //    var state = ;
 
-       var zip = ;
+    //    var zip = ;
     
        var categoryIdentifier = $(".category").data("category-id");
     
-       var queryURL = "https://api.data.charitynavigator.org/v2/Organizations?app_id=d555fab3&app_key=579ef660f0ef22b0d11f99db0ecd61a9&rated=TRUE&pageSize=8" + "&city=" + city + "&state=" + state + "&zip=" + zip + "&category=" + categoryIdentifier; 
+    //    var queryURL = "https://api.data.charitynavigator.org/v2/Organizations?app_id=d555fab3&app_key=579ef660f0ef22b0d11f99db0ecd61a9&rated=TRUE&pageSize=8" + "&city=" + city + "&state=" + state + "&zip=" + zip + "&category=" + categoryIdentifier; 
+
+       var queryURL = "https://api.data.charitynavigator.org/v2/Organizations?app_id=d555fab3&app_key=579ef660f0ef22b0d11f99db0ecd61a9&rated=TRUE&pageSize=8" + "&category=" + categoryIdentifier; 
 
     
         $.ajax({
@@ -35,13 +37,16 @@ $(document).ready(function() {
             console.log("Rating: " + data[0].currentRating.rating);
             console.log(data[0].websiteURL);
             console.log(data[0].irsClassification.subsection);
+            console.log(data[1].mailingAddress.streetAddress1 + "," + data[1].mailingAddress.city + "," +data[1].mailingAddress.stateOrProvince);
 
 
             //Loop Through Data Returned 
 
             for (var i = 0; i <data.length; i++) {
-                //most-outer Div
-                var $npDiv = $('<div class="col s6 m4 cardcol for-buttons"></div>');
+                //most-outer Div - added address class (chris)
+                var $npDiv = $('<div class="col s6 m4 cardcol for-buttons address"></div>');
+                //data-address 
+                $npDiv.attr("data-address", data[i].mailingAddress.streetAddress1 + "," + data[i].mailingAddress.city + "," + data[i].mailingAddress.stateOrProvince);
 
                 //Card Div
                 var $mycard = $('<div class="card small sticky-action"></div>');
@@ -97,6 +102,41 @@ $(document).ready(function() {
                 $("#resultsRow").append($npDiv);
             }
 
+        }
+
+        //click event handler to retrieve data-address value
+        $(document.body).on("click", ".address",googleGoogle);
+
+       
+
+        function googleGoogle() {
+
+            var address = $(this).data("address");
+
+            var queryURL1 = "https://maps.googleapis.com/maps/api/geocode/json?address="+ address + "&key=AIzaSyADEsM8kqCZ5T34NXVlTo7WI4k6X2EzHRI";
+
+
+            //GeoCoding API 
+
+            $.ajax({
+                url: queryURL1,
+                method:"GET"
+            }).then(geoCode);
+
+            function geoCode(response) {
+
+                var result = response.results;
+                var latitude = result[0].geometry.location.lat;
+                var longitude = result[0].geometry.location.lng;
+
+                console.log(latitude);
+                console.log(longitude);
+
+            }
+        
+            
+        
+        
         }
 });
 
