@@ -25,11 +25,11 @@ $(document).ready(function() {
         {state:"hawaii",abbr:"HI"},{state:"idaho",abbr:"ID"},{state:"illinois",abbr:"IL"},{state:"indiana",abbr:"IN"},{state:"iowa",abbr:"IA"},{state:"kansas",abbr:"KS"},
         {state:"kentucky",abbr:"KY"},{state:"louisiana",abbr:"LA"},{state:"maine",abbr:"ME"},{state:"maryland",abbr:"MD"},{state:"Massachusetts",abbr:"MA"},
         {state:"michigan",abbr:"MI"},{state:"minnesota",abbr:"MN"},{state:"Mississippi",abbr:"MS"},{state:"missouri",abbr:"MO"},{state:"Montana",abbr:"MT"},
-        {state:"Nebraska",abbr:"NE"},{state:"Nevada",abbr:"NV"},{state:"New Hampshire",abbr:"NH"},{state:"newjersey",abbr:"NJ"},{state:"newmexico",abbr:"NM"},
-        {state:"newyork",abbr:"NY"},{state:"northcarolina",abbr:"NC"},{state:"NorthDakota",abbr:"ND"},{state:"ohio",abbr:"OH"},{state:"oklahoma",abbr:"OK"},
-        {state:"oregon",abbr:"OR"},{state:"Pennsylvania",abbr:"PA"},{state:"RhodeIsland",abbr:"RI"},{state:"SouthCarolina",abbr:"SC"},{state:"SouthDakota",abbr:"SD"},
+        {state:"Nebraska",abbr:"NE"},{state:"Nevada",abbr:"NV"},{state:"New Hampshire",abbr:"NH"},{state:"new jersey",abbr:"NJ"},{state:"new mexico",abbr:"NM"},
+        {state:"new york",abbr:"NY"},{state:"north carolina",abbr:"NC"},{state:"North Dakota",abbr:"ND"},{state:"ohio",abbr:"OH"},{state:"oklahoma",abbr:"OK"},
+        {state:"oregon",abbr:"OR"},{state:"Pennsylvania",abbr:"PA"},{state:"Rhode Island",abbr:"RI"},{state:"South Carolina",abbr:"SC"},{state:"South Dakota",abbr:"SD"},
         {state:"tennessee",abbr:"TN"},{state:"texas",abbr:"TX"},{state:"utah",abbr:"UT"},{state:"vermont",abbr:"VT"},{state:"virginia",abbr:"VA"},{state:"Washington",abbr:"WA"},
-        {state:"WestVirginia",abbr:"WV"},{state:"wisconsin",abbr:"WI"},{state:"wyoming",abbr:"WY"},{state:"DistrictOfColumbia",abbr:"DC"}];
+        {state:"West Virginia",abbr:"WV"},{state:"wisconsin",abbr:"WI"},{state:"wyoming",abbr:"WY"},{state:"DistrictOfColumbia",abbr:"DC"}];
     
     // A currently unused array for category pictures
     var catPicsArray = [];
@@ -53,13 +53,31 @@ $(document).ready(function() {
     
     // Check local storage to see if a state has been chosen before
     if (localStorage.getItem("state_abbr")){
+        var state = localStorage.getItem("state_abbr");
         // If a state has been chosen display the current state on dropdown button
         for (var i=0;i<states.length;i++) {
             if (states[i].abbr === localStorage.getItem("state_abbr")) {
                 $(".dropdown-trigger").attr("style","text-transform:uppercase;");
                 $(".dropdown-trigger").text(states[i].state);
+                $("#charityMap").attr("src","https://www.google.com/maps/embed/v1/search?key=AIzaSyBIPIXu1T9Mi7cPAIYSlDiwaXMKWAxeB48&zoom=10&q=charitiesnear"+ states[i].state);
             }
         }
+    }
+    else {
+        // Check to see if a state has been chosen and stored locally for the results page
+        // if not assume NC
+        var state = "NC";
+        $.getJSON("http://api.db-ip.com/v2/free/self")
+            .then(addrInfo => {
+                console.log(addrInfo);
+                for (var i=0;i<states.length;i++) {
+                    if (states[i].state.toLowerCase() === addrInfo.stateProv.toLowerCase()) {
+                        $(".dropdown-trigger").attr("style","text-transform:uppercase;");
+                        $(".dropdown-trigger").text(states[i].state);
+                        $("#charityMap").attr("src","https://www.google.com/maps/embed/v1/search?key=AIzaSyBIPIXu1T9Mi7cPAIYSlDiwaXMKWAxeB48&zoom=10&q=charitiesnear"+ addrInfo.city);
+                    }
+                }
+            });
     }
 
     // Write all the states to html for the dropdown trigger on desktop and mobile
@@ -224,14 +242,6 @@ $(document).ready(function() {
 
     });
 
-    // Check to see if a state has been chosen and stored locally for the results page
-    // if not assume NC
-    if (localStorage.getItem("state_abbr")) {
-             var state = localStorage.getItem("state_abbr");
-   }
-    else {
-        var state = "NC";
-    }
     // Get the current category chosen from local storage
     var categoryId = localStorage.getItem("category");
     
