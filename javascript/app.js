@@ -441,7 +441,7 @@ $(document).ready(function () {
 
         //var $cardContentAction = $('<div class="card-action" style="height:40%;padding: 5px 18px;">');
         var $cardContentAction = $(
-          '<div class="card-action" style="height:40%;overflow:auto;">'
+          '<div class="card-action" style="overflow:auto;">'
         );
 
         var $cardContentSpan = $(
