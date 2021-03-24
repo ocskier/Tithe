@@ -81,7 +81,9 @@ footer.page-footer {
 
 /* Results page styling */
 .card .card-action{
+  height: 6em;
   padding:0;
+  margin-bottom: 0.35em;
 }
 /* Styling for title and icon layout */
 .card-title{
@@ -98,7 +100,7 @@ footer.page-footer {
 }
 
 .card-title.activator.grey-text.text-darken-4 {
-    overflow: hidden;
+    overflow: initial;
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
