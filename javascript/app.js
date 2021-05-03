@@ -172,7 +172,7 @@ $(document).ready(function () {
     // Store the returned category image in local storage
     function getResults(results) {
       console.log(results);
-      localStorage.setItem('catPic' + num, results[0].urls.full);
+      localStorage.setItem('catPic' + num, results[0].urls.small);
     }
   }
   // If local storage has no category pics then call the API for each category
